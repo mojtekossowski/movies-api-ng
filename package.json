@@ -4,8 +4,13 @@
   "description": "Movies rest API",
   "main": "server.js",
   "scripts": {
-    "test": "mocha test *.test.js",
-    "migrate": "knex migrate:latest --knexfile ./config/knexfile.js"
+    "migrate": "knex migrate:latest --knexfile ./config/knexfile.js",
+    "seed": "knex seed:run --knexfile ./config/knexfile.js",
+
+    "pretest": "export DB_NAME=test_movies_ng && export NODE_ENV=test",
+    "test": "npm run-script migrate && npm run-script seed && mocha test */*.test.js",
+
+    "postinstall": "npm run-script migrate"
   },
   "author": "mojtekossowski",
   "license": "ISC",
@@ -13,7 +18,9 @@
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",
     "express": "^4.16.4",
+    "express-validator": "^5.3.1",
     "knex": "^0.16.3",
+    "morgan": "^1.9.1",
     "pg": "^7.7.1"
   },
   "devDependencies": {
