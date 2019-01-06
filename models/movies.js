@@ -4,11 +4,15 @@ exports.getAllMovies = () => {
     return db.select('*').from(TABLES.MOVIES);
 }
 
-exports.getMovieByNormalizedTitle = (normalizedTitle) => {
+exports.getMovieByTitle = (title) => {
     return db.select('*').from(TABLES.MOVIES)
-        .where('normalized_title', normalizedTitle)
+        .where('title', 'like', title);
 }
 
 exports.saveMovie = (fetchedMovie) => {
-    return db.insert(fetchedMovie).into(TABLES.MOVIES)
+    return db.insert(fetchedMovie).into(TABLES.MOVIES);
+}
+
+exports.getMoviesComments = (title) => {
+    return db.select('*').from
 }
