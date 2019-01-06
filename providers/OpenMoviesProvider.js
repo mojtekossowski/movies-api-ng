@@ -7,5 +7,7 @@ exports.fetchMovie = async function (title) {
 
 exports.searchMovie = async function (title) {
     return fetch(`http://www.omdbapi.com/?s=${title}&apikey=${apiKey}`)
-        .then(res => res.json());
+        .then(res => res.json())
+        .then(({ Search }) => Search.map(({ Title, imdbID }) => ({Title, imdbID})))
+        .then(x => console.log(JSON.stringify(x)));
 }
