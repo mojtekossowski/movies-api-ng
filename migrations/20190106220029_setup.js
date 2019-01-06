@@ -15,8 +15,6 @@ exports.up = function (knex, Promise) {
             table.string('language').notNullable();
             table.string('country').notNullable();
             table.string('awards').notNullable();
-            table.string('poster').notNullable();
-            table.string('ratings').notNullable();
             table.string('metascore').notNullable();
             table.string('imdbrating').notNullable();
             table.string('imdbvotes').notNullable();
@@ -47,8 +45,6 @@ exports.down = function (knex, Promise) {
             table.dropColumn('language');
             table.dropColumn('country');
             table.dropColumn('awards');
-            table.dropColumn('poster');
-            table.dropColumn('ratings');
             table.dropColumn('metascore');
             table.dropColumn('imdbrating');
             table.dropColumn('imdbvotes');
