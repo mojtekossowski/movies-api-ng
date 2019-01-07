@@ -51,6 +51,30 @@ exports.seed = function (knex, Promise) {
         "boxoffice": "N/A",
         "production": "N/A",
         "website": "N/A"
-      }]);
+      }, {
+        "id": 3,
+        "title": "Star Wars: Episode IV - A New Hope",
+        "year": "1977",
+        "rated": "PG",
+        "released": "25 May 1977",
+        "runtime": "121 min",
+        "genre": "Action, Adventure, Fantasy, Sci-Fi",
+        "director": "George Lucas",
+        "writer": "George Lucas",
+        "actors": "Mark Hamill, Harrison Ford, Carrie Fisher, Peter Cushing",
+        "plot": "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station, while also attempting to rescue Princess Leia from the mysterious Darth Vader.",
+        "language": "English",
+        "country": "USA",
+        "awards": "Won 6 Oscars. Another 50 wins & 28 nominations.",
+        "metascore": "90",
+        "imdbrating": "8.6",
+        "imdbvotes": "1,092,532",
+        "imdbid": "tt0076759",
+        "type": "movie",
+        "dvd": "21 Sep 2004",
+        "boxoffice": "N/A",
+        "production": "20th Century Fox",
+        "website": "http://www.starwars.com/episode-iv/",
+    }]);
     });
 };
