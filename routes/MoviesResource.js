@@ -12,9 +12,8 @@ movies.get('/:id/comments', catchAsync(MoviesController.getMovieComments))
 movies.post('/', [
     MoviesController.validate,
     MoviesController.checkValid,
-    MoviesController.checkIfExists,
-    MoviesController.fetchFromExternalApi,
-    MoviesController.store,
+    catchAsync(MoviesController.checkIfExists),
+    catchAsync(MoviesController.fetchFromExternalApi),
     catchAsync(MoviesController.store)
 ]);
 

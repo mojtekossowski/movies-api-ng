@@ -6,7 +6,7 @@ const MoviesModel = require('../models/movies');
 const OpenMoviesProvider = require('../providers/OpenMoviesProvider');
 
 exports.getAll = async (req, res, next) => {
-    res.json(await MoviesModel.getAllMovies());
+    res.status(HttpStatus.OK).json(await MoviesModel.getAllMovies());
 }
 
 exports.getOne = async (req, res, next) => {
@@ -20,22 +20,22 @@ exports.getOne = async (req, res, next) => {
     const movies = await MoviesModel.getMoviesByTitle(title);
     if (!movies.length) {
         return res.status(HttpStatus.NOT_FOUND).json({
-            message: "No movies found"
+            message: "Movie not found"
         });
     }
     
-    res.json(movie[0]);
+    res.status(HttpStatus.OK).json(movies[0]);
 }
 
 exports.getMovieComments = async (req, res, next) => {
-    const id = req.params.id.trim();
+    const id = +req.params.id.trim();
     if (!id) {
         return res.status(HttpStatus.BAD_REQUEST).json({
             message: "Invalid movie id"
         });
     }
 
-    res.json(await MoviesModel.getMovieComments(id));
+    res.status(HttpStatus.OK).json(await MoviesModel.getMovieComments(id));
 }
 
 exports.validate = [
@@ -45,7 +45,7 @@ exports.validate = [
 exports.checkValid = (req, res, next) => {
     const errors = validationResult(req);
 
-    if (!errors.isEmpty) {
+    if (!errors.isEmpty()) {
         return res.status(HttpStatus.BAD_REQUEST).json({
             message: errors.mapped()
         })
@@ -64,32 +64,44 @@ exports.checkIfExists = async (req, res, next) => {
         })
     }
 
-    next(req, res, next);
+    next();
 }
 
 exports.fetchFromExternalApi = async(req, res, next) => {
-    const externalRecord = await OpenMoviesProvider.fetchMovie(title);
+    const externalRecord = await OpenMoviesProvider.fetchMovie(req.body.title);
 
     delete req.body.title;
     delete req.body.id;
 
     req.body = {
-        ...req.body,
-        ...externalRecord
+        ...externalRecord,
+        ...req.body
     }
 
-    next(req, res, next);
+    next();
 }
 
 exports.store = async (req, res, next) => {
-    await MoviesModel.saveMovie(req.body)
+    try {
+        await MoviesModel.saveMovie(req.body)
+    } catch (ex) {
+        const unableToStoreError = new Error('Unable to store - invalid schema')
+        unableToStoreError.status = HttpStatus.BAD_REQUEST;
+
+        throw unableToStoreError;
+    }
 
     res.status(HttpStatus.CREATED).send();
 }
 
 exports.deleteOne = async (req, res, next) => {
-    await MoviesModel.removeMovie(req.params.id.trim())
-
-    res.status(HttpStatus.OK).send();
+    const result = await MoviesModel.removeMovie(req.params.id.trim())
+    if (result) {
+        res.status(HttpStatus.OK).send();
+    } else {
+        res.status(HttpStatus.NOT_FOUND).json({
+            message: `Comment with given id doesn't exist`
+        });
+    }
 }
 

@@ -4,7 +4,8 @@
   "description": "Movies rest API",
   "main": "server.js",
   "scripts": {
-    "rollback": "knex migrate:latest --knexfile ./config/knexfile.js",
+    "loadenv": "export $(egrep -v '^#' .env | xargs)",
+    "rollback": "knex migrate:rollback --knexfile ./config/knexfile.js",
     "migrate": "knex migrate:latest --knexfile ./config/knexfile.js",
     "seed": "knex seed:run --knexfile ./config/knexfile.js",
     "pretest": "npm run-script migrate -- --env test && npm run-script seed -- --env test",

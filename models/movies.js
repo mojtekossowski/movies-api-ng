@@ -4,6 +4,11 @@ exports.getAllMovies = () => {
     return db.select('*').from(TABLES.MOVIES);
 }
 
+exports.getMoviesById = (id) => {
+    return db.select('*').from(TABLES.MOVIES)
+        .where('id', id);
+}
+
 exports.getMoviesByTitle = (title) => {
     return db.select('*').from(TABLES.MOVIES)
         .where('title', 'ilike', `%${title}%`);
