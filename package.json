@@ -4,10 +4,11 @@
   "description": "Movies rest API",
   "main": "server.js",
   "scripts": {
+    "rollback": "knex migrate:latest --knexfile ./config/knexfile.js",
     "migrate": "knex migrate:latest --knexfile ./config/knexfile.js",
     "seed": "knex seed:run --knexfile ./config/knexfile.js",
     "pretest": "npm run-script migrate -- --env test && npm run-script seed -- --env test",
-    "test": "NODE_ENV=test mocha test */*.test.js",
+    "test": "NODE_ENV=test mocha --exit ./*/*.test.js",
     "postinstall": "npm run-script migrate"
   },
   "author": "mojtekossowski",
