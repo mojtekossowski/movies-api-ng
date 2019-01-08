@@ -1,25 +1,78 @@
-require('dotenv').config({ path: '../.env' });
+const path = require('path')
+require('dotenv').config(path.resolve(__dirname, '../.env'));
 
 module.exports = {
-    client: 'postgresql',
 
-    connection: {
-        user: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
+    prod: {
+        client: 'postgresql',
+    
+        connection: {
+            user: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+        },
+    
+        pool: {
+            min: 2,
+            max: 10
+        },
+    
+        migrations: {
+            tableName: 'knex_migrations',
+            directory: '../migrations'
+        },
+    
+        seeds: {
+            directory: '../seeds'
+        }
+    },
+    
+    dev: {
+        client: 'postgresql',
+    
+        connection: {
+            user: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+        },
+    
+        pool: {
+            min: 2,
+            max: 10
+        },
+    
+        migrations: {
+            tableName: 'knex_migrations',
+            directory: '../migrations'
+        },
+    
+        seeds: {
+            directory: '../seeds'
+        }
     },
 
-    pool: {
-        min: 2,
-        max: 10
-    },
+    test: {
+        client: 'postgresql',
 
-    migrations: {
-        tableName: 'knex_migrations',
-        directory: '../migrations'
-    },
-
-    seeds: {
-        directory: '../seeds'
+        connection: {
+            user: 'test',
+            password: 'test',
+            database: 'test',
+        },
+    
+        pool: {
+            min: 2,
+            max: 10
+        },
+    
+        migrations: {
+            tableName: 'knex_migrations',
+            directory: '../migrations'
+        },
+    
+        seeds: {
+            directory: '../seeds'
+        }    
     }
+
 };

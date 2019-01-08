@@ -6,8 +6,8 @@
   "scripts": {
     "migrate": "knex migrate:latest --knexfile ./config/knexfile.js",
     "seed": "knex seed:run --knexfile ./config/knexfile.js",
-    "pretest": "export DB_NAME=test_movies_ng && export NODE_ENV=test",
-    "test": "npm run-script migrate && npm run-script seed && mocha test */*.test.js",
+    "pretest": "npm run-script migrate -- --env test && npm run-script seed -- --env test",
+    "test": "NODE_ENV=test mocha test */*.test.js",
     "postinstall": "npm run-script migrate"
   },
   "author": "mojtekossowski",

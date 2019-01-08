@@ -6,7 +6,7 @@ const { catchAsync } = require('../middlewares/errors')
 const MoviesController = require('../controllers/MoviesController');
 
 resource.get('/', catchAsync(MoviesController.getAll));
-resource.get('/:id', catchAsync(MoviesController.getOne));
+resource.get('/:title', catchAsync(MoviesController.getOne));
 resource.post('/', catchAsync(MoviesController.store))
 resource.delete('/:id', catchAsync(MoviesController.deleteOne))
 

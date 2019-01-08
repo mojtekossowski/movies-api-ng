@@ -30,15 +30,10 @@ exports.up = function(knex, Promise) {
 
         knex.schema.createTable('comments', (table) => {
             table.increments('id').primary();
+            table.integer('movie_id').notNullable().references('movies_id');
             table.string('user').notNullable();
             table.string('title').notNullable();
             table.string('contents').notNullable();
-        }),
-
-        knex.schema.createTable('movies_comments', (table) => {
-            table.increments('id').primary();
-            table.integer('movie_id').references('movies_id');
-            table.integer('comment_id').references('comments.id');
         })
 
     ]);
@@ -46,7 +41,6 @@ exports.up = function(knex, Promise) {
 
 exports.down = function(knex, Promise) {
     return Promise.all([
-        knex.schema.dropTable('movies_comments'),
         knex.schema.dropTable('movies'),
         knex.schema.dropTable('comments'),
     ]);

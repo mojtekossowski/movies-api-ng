@@ -1,11 +1,12 @@
 const knex = require('knex');
 const config = require('./config/knexfile');
 
+const env = process.env.NODE_ENV || 'dev';
+
 module.exports = {
-    db: knex(config),
+    db: knex(config[env]),
     TABLES: {
         MOVIES: 'movies',
-        COMMENTS: 'comments',
-        MOVIES_COMMENTS: 'movies_comments'
+        COMMENTS: 'comments'
     }
 }

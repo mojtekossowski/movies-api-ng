@@ -10,6 +10,12 @@ class MoviesController extends IController {
         res.json(await MoviesModel.getAllMovies())
     }
 
+    async getOne(req, res, next) {
+        const title = req.params.title;
+        if (!title) throw new Error("Movie title must be specified")
+        res.json(await MoviesModel.getMovieByTitle(title))
+    }
+
 }
 
 module.exports = new MoviesController;

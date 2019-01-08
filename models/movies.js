@@ -14,5 +14,5 @@ exports.saveMovie = (fetchedMovie) => {
 }
 
 exports.getMoviesComments = (title) => {
-    return db.select('*').from
+    return db.select('*').from(TABLES.COMMENTS);
 }
