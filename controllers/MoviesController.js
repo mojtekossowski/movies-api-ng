@@ -11,9 +11,17 @@ class MoviesController extends IController {
     }
 
     async getOne(req, res, next) {
-        const title = req.params.title;
-        if (!title) throw new Error("Movie title must be specified")
-        res.json(await MoviesModel.getMovieByTitle(title))
+        const title = req.params.title.trim();
+        if (!title) {
+            throw new Error("Movie title must be not empty")
+        }
+
+        const movies = await MoviesModel.getMoviesByTitle(title);
+        if (!movies.length) {
+            throw new Error(`No such movie ${title}`)
+        }
+
+        res.json(movie[0])
     }
 
 }

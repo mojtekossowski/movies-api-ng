@@ -2,13 +2,13 @@ exports.seed = function(knex, Promise) {
   return knex('comments').insert([{
     "id": 1,
     "movie_id": 1,
-    "user": "Mariola",
+    "user": "Macciavelli",
     "title": "Foo",
     "contents": "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Unde, itaque!"
   }, {
     "id": 2,
     "movie_id": 2,
-    "user": "Stephane",
+    "user": "Macciavelli",
     "title": "Bar",
     "contents": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Blanditiis commodi maxime, quis numquam dolores repellendus recusandae reiciendis earum? Eos, ratione."
   }, {
@@ -26,7 +26,7 @@ exports.seed = function(knex, Promise) {
   }, {
     "id": 5,
     "movie_id": 2,
-    "user": "Giovanni",
+    "user": "Macciavelli",
     "title": "Ipsum",
     "contents": "Tempora, odio ut. Similique porro quaerat ipsam enim blanditiis accusantium sequi commodi ea laboriosam totam unde, laudantium nemo eveniet."
   }, {
@@ -38,13 +38,13 @@ exports.seed = function(knex, Promise) {
   }, {
     "id": 7,
     "movie_id": 1,
-    "user": "Maklowicz",
+    "user": "Boris",
     "title": "Sit",
     "contents": "At a laborum quae deleniti, debitis, ut distinctio quam unde soluta, aperiam quaerat itaque exercitationem!"
   }, {
     "id": 8,
     "movie_id": 2,
-    "user": "Amet",
+    "user": "Boris",
     "title": "Boom",
     "contents": "Laboriosam ipsa corporis recusandae adipisci dolor cupiditate labore, doloremque odio repellat repudiandae. Odio similique exercitationem corrupti cupiditate, voluptatum neque et alias quam cumque."
   }]);

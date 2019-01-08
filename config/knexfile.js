@@ -1,9 +1,11 @@
 const path = require('path')
-require('dotenv').config(path.resolve(__dirname, '../.env'));
+const buildAbsoulte = (relativePath) => path.resolve(__dirname, relativePath)
+
+require('dotenv').config(buildAbsoulte('../.env'));
 
 module.exports = {
 
-    prod: {
+    production: {
         client: 'postgresql',
     
         connection: {
@@ -19,11 +21,11 @@ module.exports = {
     
         migrations: {
             tableName: 'knex_migrations',
-            directory: '../migrations'
+            directory: buildAbsoulte('../migrations')
         },
     
         seeds: {
-            directory: '../seeds'
+            directory: buildAbsoulte('../seeds')
         }
     },
     
@@ -43,11 +45,11 @@ module.exports = {
     
         migrations: {
             tableName: 'knex_migrations',
-            directory: '../migrations'
+            directory: buildAbsoulte('../migrations')
         },
     
         seeds: {
-            directory: '../seeds'
+            directory: buildAbsoulte('../seeds')
         }
     },
 
@@ -67,11 +69,11 @@ module.exports = {
     
         migrations: {
             tableName: 'knex_migrations',
-            directory: '../migrations'
+            directory: buildAbsoulte('../migrations')
         },
     
         seeds: {
-            directory: '../seeds'
+            directory: buildAbsoulte('../seeds')
         }    
     }
 

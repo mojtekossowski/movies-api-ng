@@ -4,15 +4,28 @@ exports.getAllMovies = () => {
     return db.select('*').from(TABLES.MOVIES);
 }
 
-exports.getMovieByTitle = (title) => {
+exports.getMoviesByTitle = (title) => {
     return db.select('*').from(TABLES.MOVIES)
-        .where('title', 'like', title);
+        .where('title', 'ilike', `%${title}%`);
 }
 
-exports.saveMovie = (fetchedMovie) => {
-    return db.insert(fetchedMovie).into(TABLES.MOVIES);
+exports.getMovieComments = (id) => {
+    return db.select('*').from(TABLES.COMMENTS)
+        .where('movie_id', id);
 }
 
-exports.getMoviesComments = (title) => {
-    return db.select('*').from(TABLES.COMMENTS);
+exports.saveMovie = (movie) => {
+    return db.insert(movie).into(TABLES.MOVIES);
+}
+
+exports.updateMovie = (id, changes) => {
+    return db(TABLES.MOVIES)
+        .where('id', id)
+        .update(changes);
+}
+
+exports.removeMovie = (id) => {
+    return db(TABLES.MOVIES)
+        .where('id', id)
+        .delete();
 }
