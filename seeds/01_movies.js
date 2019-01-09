@@ -1,5 +1,6 @@
 exports.seed = function (knex, Promise) {
   return knex('movies').insert([{
+    "id": 1,
     "title": "To Wong Foo Thanks for Everything, Julie Newmar",
     "year": "1995",
     "rated": "PG-13",
@@ -23,6 +24,7 @@ exports.seed = function (knex, Promise) {
     "production": "Universal Pictures",
     "website": "N/A"
   }, {
+    "id": 2,
     "title": "Wszystko",
     "year": "2008",
     "rated": "N/A",
@@ -46,6 +48,7 @@ exports.seed = function (knex, Promise) {
     "production": "N/A",
     "website": "N/A"
   }, {
+    "id": 3,
     "title": "Star Wars: Episode IV - A New Hope",
     "year": "1977",
     "rated": "PG",
