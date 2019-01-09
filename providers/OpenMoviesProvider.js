@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
 const _ = require('lodash');
 
 const apiKey = process.env.EXT_OMDB_APIKEY;
@@ -25,8 +25,8 @@ function normalize (fetchedMovie) {
 exports.normalize = normalize;
 
 exports.fetchMovie = async function (title) {
-    return fetch(`http://www.omdbapi.com/?t=${title}&apikey=${apiKey}`)
-        .then(res => res.json())
+    return axios.get(`http://www.omdbapi.com/?t=${title}&apikey=${apiKey}`)
+        .then(res => res.data)
         .then(movie => {
             if (movie.Error) {
                 throw new Error(`External Api error: ${ movie.Error }`)
@@ -37,7 +37,7 @@ exports.fetchMovie = async function (title) {
 }
 
 exports.searchMovie = async function (title) {
-    return fetch(`http://www.omdbapi.com/?s=${title}&apikey=${apiKey}`)
-        .then(res => res.json())
+    return axios.get(`http://www.omdbapi.com/?s=${title}&apikey=${apiKey}`)
+        .then(res => res.data)
         .then(({ Search }) => Search.map(({ Title: title, imdbID: imdbid }) => ({ title, imdbid})))
 }
