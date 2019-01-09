@@ -152,9 +152,9 @@ describe('MoviesModel', function() {
         });
 
         it ('doesnt update when for wrong schema', function (done) {
-            expect(MoviesModel.updateMovie(1, { 
-                foo: 'Foo'
-            })).to.eventually.be.rejected.then((error) => {
+            expect(
+                MoviesModel.updateMovie(1, { foo: 'Foo' })
+            ).to.eventually.be.rejected.then(() => {
                 done();
             });
 
