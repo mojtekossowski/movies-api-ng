@@ -51,7 +51,11 @@ describe('OpenMoviesProvider', function () {
             sandbox.stub(axios, 'get').resolves({
                 status: 200,
                 data: {
-                    Title: "Foo", Director: "Bar", Response: "Baz", Poster: "Asdf", Ratings: "Ghij"
+                    Title: "Foo", 
+                    Director: "Bar", 
+                    Response: "Baz", 
+                    Poster: "Asdf", 
+                    Ratings: "Ghij"
                 }
             });
 
