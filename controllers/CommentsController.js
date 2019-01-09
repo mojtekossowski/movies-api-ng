@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator/check');
+const { param, body } = require('express-validator/check');
 const HttpStatus = require('http-status-codes');
 
 const CommentsModel = require('../models/comments');
@@ -9,13 +9,7 @@ exports.getAll = async (req, res, next) => {
 }
 
 exports.getOne = async (req, res, next) => {
-    const user = req.params.user.trim();
-    if (!user) {
-        return res.status(HttpStatus.BAD_REQUEST).json({
-            message: "Invalid user name"
-        });
-    }
-
+    const user = req.params.user;
     const comments = await CommentsModel.getCommentsByUser(user);
     if (!comments.length) {
         return res.status(HttpStatus.NOT_FOUND).json({
@@ -26,40 +20,31 @@ exports.getOne = async (req, res, next) => {
     res.status(HttpStatus.OK).json(comments);
 }
 
-exports.validate = [
-    check('movie_id').isInt().withMessage('Movie id must be an integer.'),
-    check('user').trim().isLength({ min:1 }).withMessage('User not specified'),
-    check('title').trim().isLength({ min:1 }).withMessage('Title not specified'),
-    check('contents').trim().isLength({ min:1 }).withMessage('Contents not specified'),
+exports.validateStore = [
+    body('movie_id').trim().isInt().withMessage('Movie id must be an integer.'),
+    body('user').trim().isLength({ min:1 }).withMessage('User not specified'),
+    body('title').trim().isLength({ min:1 }).withMessage('Title not specified'),
+    body('contents').trim().isLength({ min:1 }).withMessage('Contents not specified'),
 ]
 
-exports.checkValid = (req, res, next) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(HttpStatus.BAD_REQUEST).json({
-            message: errors.mapped()
-        })
-    }
-
-    next();
-}
-
 exports.checkIfMovieExists = async (req, res, next) => {
-    const storedMovies = await MoviesModel.getMoviesById(req.body.movie_id);
+    if (req.body.movie_id) {
+        const storedMovies = await MoviesModel.getMoviesById(req.body.movie_id);
+    
+        if (!storedMovies.length) {
+            return res.status(HttpStatus.BAD_REQUEST).json({
+                message: `Movie with given movie_id doesn't exist`
+            });
+        }
 
-    if (!storedMovies.length) {
-        return res.status(HttpStatus.BAD_REQUEST).json({
-            message: `Movie with given movie_id doesn't exist`
-        })
     }
 
     next();
 }
 
 exports.store = async (req, res, next) => {
-    const { movie_id, user, title, contents } = req.body;
     try {
+        const { movie_id, user, title, contents } = req.body;
         await CommentsModel.saveComment({
             movie_id, user, title, contents
         });
@@ -73,8 +58,26 @@ exports.store = async (req, res, next) => {
     res.status(HttpStatus.CREATED).send();
 }
 
+exports.validateUpdate = [
+    param('id').trim().isInt().withMessage('Comment id must be an integer.')
+]
+
+exports.update = async (req, res, next) => {
+    const id = req.params.id;
+    try {
+        await CommentsModel.updateComment(id, req.body);
+    } catch (ex) {
+        const unableToUpdateError = new Error('Unable to update - invalid schema')
+        unableToUpdateError.status = HttpStatus.BAD_REQUEST;
+
+        throw unableToUpdateError;
+    }
+
+    res.status(HttpStatus.NO_CONTENT).send();
+}
+
 exports.deleteOne = async (req, res, next) => {
-    const result = await CommentsModel.removeComment(req.params.id.trim())
+    const result = await CommentsModel.removeComment(req.params.id)
     if (result) {
         res.status(HttpStatus.OK).send();
     } else {

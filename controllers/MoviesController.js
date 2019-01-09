@@ -1,4 +1,4 @@
-const { check, validationResult } = require('express-validator/check');
+const { param, body } = require('express-validator/check');
 const HttpStatus = require('http-status-codes');
 
 const MoviesModel = require('../models/movies');
@@ -27,35 +27,21 @@ exports.getOne = async (req, res, next) => {
     res.status(HttpStatus.OK).json(movies[0]);
 }
 
-exports.getMovieComments = async (req, res, next) => {
-    const id = +req.params.id.trim();
-    if (!id) {
-        return res.status(HttpStatus.BAD_REQUEST).json({
-            message: "Invalid movie id"
-        });
-    }
+exports.validateId = [
+    param('id').trim().isInt().withMessage('Movie Id should be an integer')
+]
 
+exports.getMovieComments = async (req, res, next) => {
+    const id = req.params.id;
     res.status(HttpStatus.OK).json(await MoviesModel.getMovieComments(id));
 }
 
-exports.validate = [
-    check('title').trim().isLength({ min:1 }).withMessage('No title specified')
+exports.validateStore = [
+    body('title').trim().isLength({ min:1 }).withMessage('No title specified')
 ]
 
-exports.checkValid = (req, res, next) => {
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        return res.status(HttpStatus.BAD_REQUEST).json({
-            message: errors.mapped()
-        })
-    }
-
-    next();
-}
-
 exports.checkIfExists = async (req, res, next) => {
-    const title = req.body.title = req.body.title.trim();
+    const title = req.body.title;
     
     const existingMovie = await MoviesModel.getMoviesByTitle(title)
     if (existingMovie.length) {
@@ -92,6 +78,24 @@ exports.store = async (req, res, next) => {
     }
 
     res.status(HttpStatus.CREATED).send();
+}
+
+exports.validateUpdate = [
+    param('id').isInt().withMessage('Movie id must be an integer.')
+]
+
+exports.update = async (req, res, next) => {
+    const id = req.params.id;
+    try {
+        await MoviesModel.updateMovie(id, req.body);
+    } catch (ex) {
+        const unableToUpdateError = new Error('Unable to update - invalid schema')
+        unableToUpdateError.status = HttpStatus.BAD_REQUEST;
+
+        throw unableToUpdateError;
+    }
+
+    res.status(HttpStatus.NO_CONTENT).send();
 }
 
 exports.deleteOne = async (req, res, next) => {

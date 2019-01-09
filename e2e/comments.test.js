@@ -10,6 +10,8 @@ chai.use(chaiHttp);
 const server = require('../app');
 const { db } = require('../db');
 
+const CommentsModel = require('../models/comments');
+
 describe('Comments', function () {
 
     before((done) => {
@@ -211,6 +213,70 @@ describe('Comments', function () {
         });
 
     });
+
+    describe('/PATCH comments :id', function () {
+
+        this.beforeEach((done) => {
+            db.seed.run().then(() => done() )
+        });
+
+        this.afterEach((done) => {
+            db.seed.run().then(() => done() )
+        });
+
+        it('PATCH updates existing fields', function (done) {
+            chai.request(server)
+                .patch('/api/v1/comments/1')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    "user": "Foo"
+                }).then(async (res) => {
+                    expect(res).to.have.status(204);
+                    
+                    done();
+                })
+        });
+
+        it ('PATCH doesnt updates non-integer comment', function (done) {
+            chai.request(server)
+                .patch('/api/v1/comments/foo')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    "user": "Foo"
+                }).then(async (res) => {
+                    expect(res).to.have.status(400);
+                    
+                    done();
+                })
+        });
+
+        it ('PATCH doesnt updates when some of basic fields are not present', function (done){
+            chai.request(server)
+                .patch('/api/v1/comments/foo')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    "inexisting": "Foo"
+                }).then(async (res) => {
+                    expect(res).to.have.status(400);
+                    
+                    done();
+                })
+        });
+
+        it ('PATCH doesnt inexisting movie id', function (done){
+            chai.request(server)
+                .patch('/api/v1/comments/1')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    "movie_id": 351
+                }).then(async (res) => {
+                    expect(res).to.have.status(400);
+
+                    done();
+                })
+        });
+
+    })
 
     describe('/DELETE comments :id', function () {
 

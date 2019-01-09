@@ -4,6 +4,11 @@ exports.getAllComments = () => {
     return db.select('*').from(TABLES.COMMENTS);
 }
 
+exports.getCommentsById = (id) => {
+    return db.select('*').from(TABLES.COMMENTS)
+        .where('id', id);
+}
+
 exports.getCommentsByUser = (user) => {
     return db.select('*').from(TABLES.COMMENTS)
         .where('user', 'ilike', `%${user}%`);

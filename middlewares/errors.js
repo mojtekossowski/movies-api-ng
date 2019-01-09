@@ -1,3 +1,6 @@
+const { validationResult } = require('express-validator/check')
+const HttpStatus = require('http-status-codes');
+
 /**
  * Wraps up async function/Promise object and executes next middleware function
  * when exception was thrown.
@@ -14,10 +17,6 @@ const catchAsync = (asyncFunction) => {
 /**
  * Sends error message stored in Error object to the client
  * 
- * @param {Error} err Error Object
- * @param {Obect} req Request Object
- * @param {Object} res Response Object
- * @param {Function} next Next middleware
  */
 const catchErrors = (err, req, res, next) => {
     res.status(err.status || 500);
@@ -26,7 +25,24 @@ const catchErrors = (err, req, res, next) => {
     });
 }
 
+/**
+ * Sends error message with BadRequest if express-validator found any incorrectness
+ */
+const checkValid = (req, res, next) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        return res.status(HttpStatus.BAD_REQUEST).json({
+            message: errors.mapped()
+        })
+    }
+
+    next();
+}
+
+
 module.exports = {
     catchAsync,
-    catchErrors
+    catchErrors,
+    checkValid
 }
