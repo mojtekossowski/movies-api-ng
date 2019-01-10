@@ -4,7 +4,6 @@
   "description": "Movies rest API",
   "main": "server.js",
   "scripts": {
-    "heroku-postbuild": "npm run-script migrate -- --env production",
     "generate-docs": "apidoc -i routes/ -o apidoc",
     "loadenv": "export $(egrep -v '^#' .env | xargs)",
     "rollback": "knex migrate:rollback --knexfile ./config/knexfile.js",
