@@ -6,18 +6,23 @@ const MoviesModel = require('../models/movies');
 const OpenMoviesProvider = require('../providers/OpenMoviesProvider');
 
 exports.getAll = async (req, res, next) => {
-    res.status(HttpStatus.OK).json(await MoviesModel.getAllMovies());
+    if (!req.query.title) {
+        return res.status(HttpStatus.OK).json(await MoviesModel.getAllMovies());
+    }
+    
+    const title = req.query.title.trim();
+    const movies = await MoviesModel.getMoviesByTitle(title);
+    
+    res.status(HttpStatus.OK).json(movies);
 }
 
-exports.getOne = async (req, res, next) => {
-    const title = req.params.title.trim();
-    if (!title) {
-        return res.status(HttpStatus.BAD_REQUEST).json({
-            message: "Invalid title"
-        });
-    }
+exports.validateId = [
+    param('id').trim().isInt().withMessage('Movie Id should be an integer')
+]
 
-    const movies = await MoviesModel.getMoviesByTitle(title);
+exports.getOne = async (req, res, next) => {
+    const id = req.params.id;
+    const movies = await MoviesModel.getMoviesById(id);
     if (!movies.length) {
         return res.status(HttpStatus.NOT_FOUND).json({
             message: "Movie not found"
@@ -26,10 +31,6 @@ exports.getOne = async (req, res, next) => {
     
     res.status(HttpStatus.OK).json(movies[0]);
 }
-
-exports.validateId = [
-    param('id').trim().isInt().withMessage('Movie Id should be an integer')
-]
 
 exports.getMovieComments = async (req, res, next) => {
     const id = req.params.id;

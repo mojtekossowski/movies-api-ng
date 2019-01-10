@@ -37,31 +37,32 @@ describe('Movies', function () {
                     const movies = Array.from(res.body);
                     expect(movies).to.be.lengthOf(3);
 
+                    // Check if object has proper keys
+                    const movieKeys = ["id", ...Object.keys(fakeMovieRecord)];
                     movies.forEach((movie) => {
-                        expect(movie).to.haveOwnProperty('id')
-                        expect(movie).to.haveOwnProperty('title')
-                        expect(movie).to.haveOwnProperty('year')
-                        expect(movie).to.haveOwnProperty('rated')
-                        expect(movie).to.haveOwnProperty('released')
-                        expect(movie).to.haveOwnProperty('runtime')
-                        expect(movie).to.haveOwnProperty('genre')
-                        expect(movie).to.haveOwnProperty('director')
-                        expect(movie).to.haveOwnProperty('writer')
-                        expect(movie).to.haveOwnProperty('actors')
-                        expect(movie).to.haveOwnProperty('plot')
-                        expect(movie).to.haveOwnProperty('language')
-                        expect(movie).to.haveOwnProperty('country')
-                        expect(movie).to.haveOwnProperty('awards')
-                        expect(movie).to.haveOwnProperty('metascore')
-                        expect(movie).to.haveOwnProperty('imdbrating')
-                        expect(movie).to.haveOwnProperty('imdbvotes')
-                        expect(movie).to.haveOwnProperty('imdbid')
-                        expect(movie).to.haveOwnProperty('type')
-                        expect(movie).to.haveOwnProperty('dvd')
-                        expect(movie).to.haveOwnProperty('boxoffice')
-                        expect(movie).to.haveOwnProperty('production')
-                        expect(movie).to.haveOwnProperty('website')
+                        expect(movie).to.be.an('Object');
+                        
+                        // Check if stored movie has proper keys
+                        movieKeys.forEach((key) => {
+                            expect(movie).to.haveOwnProperty(key)
+                        });
                     });
+
+                    done();
+                });
+        });
+
+        it ('GET movie by title', function(done) {
+            chai.request(server)
+                .get('/api/v1/movies/?title=foo')
+                .then((res) => {
+                    expect(res).to.have.status(200);
+                    expect(res).to.be.json;
+
+                    const movies = res.body;
+                    expect(movies).to.be.an('Array').that.is.lengthOf(1);
+
+                    expect(movies[0].id).to.be.equal(1);
 
                     done();
                 });
@@ -69,17 +70,16 @@ describe('Movies', function () {
 
     });
 
-    describe('/GET movies :title', function () {
+    describe('/GET movies :id', function () {
 
         it ('GET returns movie when exists', function (done) {
             chai.request(server)
-                .get('/api/v1/movies/foo')
+                .get('/api/v1/movies/1')
                 .then((res) => {
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
 
                     const movie = res.body;
-                    expect(movie.id).to.be.equal(1);
                     expect(movie.title).to.be.equal('To Wong Foo Thanks for Everything, Julie Newmar');
                     expect(movie.year).to.be.equal('1995');
 
@@ -89,9 +89,20 @@ describe('Movies', function () {
 
         it ('GET returns NOT_FOUND movie when not exists', function (done) {
             chai.request(server)
-                .get('/api/v1/movies/somenotexistingmovie')
+                .get('/api/v1/movies/2137')
                 .then((res) => {
                     expect(res).to.have.status(404);
+                    expect(res).to.be.json;
+
+                    done();
+                });
+        });
+
+        it ('GET returns BAD_REQUEST when id is not integer', function (done) {
+            chai.request(server)
+                .get('/api/v1/movies/foo')
+                .then((res) => {
+                    expect(res).to.have.status(400);
                     expect(res).to.be.json;
 
                     done();
@@ -210,24 +221,110 @@ describe('Movies', function () {
 
     describe('/PATCH movies :id', function () {
 
-        this.beforeEach(() => {
+        this.beforeEach((done) => {
             db.seed.run().then(() => done() );
         });
 
-        this.afterEach(() => {
+        this.afterEach((done) => {
             db.seed.run().then(() => done() );
+        });
+
+        it('PATCH updates existing movie with proper fields', function (done) {
+            chai.request(server)
+                .patch('/api/v1/movies/1')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    "title": "some_new_title"
+                }).then((res) => {
+                    expect(res).to.have.status(204);
+                    
+                    done();
+                })
+        });
+
+        it('PATCH does not update non-integer movie with passed movie id', function (done) {
+            chai.request(server)
+                .patch('/api/v1/movies/foo')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    "title": "new_title"
+                }).then((res) => {
+                    expect(res).to.have.status(400);
+                    
+                    done();
+                })
+        });
+
+        it('PATCH does not update movie with invalid property', function (done) {
+            chai.request(server)
+                .patch('/api/v1/movies/1')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    "not-existing-property": "new_contents"
+                }).then((res) => {
+                    expect(res).to.have.status(400);
+                    
+                    done();
+                })
+        });
+
+        it('PATCH does not update not existing movie', function (done) {
+            chai.request(server)
+                .patch('/api/v1/movies/10')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    "contents": "new_contents"
+                }).then((res) => {
+                    expect(res).to.have.status(400);
+                    
+                    done();
+                })
         });
 
     });
 
     describe('/DELETE movies :id', function () {
 
-        this.beforeEach(() => {
+        this.beforeEach((done) => {
             db.seed.run().then(() => done() );
         });
 
-        this.afterEach(() => {
+        this.afterEach((done) => {
             db.seed.run().then(() => done() );
+        });
+
+        it ('DELETE removes existing movie', function (done) {
+            Promise.all([
+                // Count existing comments
+                chai.request(server)
+                    .get('/api/v1/movies')
+                    .then((res) => Array.from(res.body).length),
+
+                // Delete one comment
+                chai.request(server)
+                    .delete('/api/v1/movies/1')
+            ]).then(([amount, res]) => {
+                expect(res).to.have.status(200);
+
+                chai.request(server)
+                    .get('/api/v1/movies')
+                    .then((res) => Array.from(res.body).length)
+                    .then((newAmount) => {
+                        expect(newAmount - amount).to.be.be.equal(-1);
+                        done();
+                    });
+
+            });
+        });
+
+        it ('DELETE raises error on invalid comment id', function (done) {
+            chai.request(server)
+                .delete('/api/v1/movies/10')
+                .then((res) => {
+                    expect(res).to.have.status(404);
+
+                    done();
+                });
         });
 
     });

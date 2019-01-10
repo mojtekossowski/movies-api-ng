@@ -7,7 +7,11 @@ const CommentsController = require('../controllers/CommentsController');
 
 comments.get('/', catchAsync(CommentsController.getAll));
 
-comments.get('/:user', catchAsync(CommentsController.getOne));
+comments.get('/:id', [
+    CommentsController.validateId,
+    checkValid,
+    catchAsync(CommentsController.getOne)
+]);
 
 comments.post('/', [
     CommentsController.validateStore,
@@ -17,7 +21,7 @@ comments.post('/', [
 ])
 
 comments.patch('/:id', [
-    CommentsController.validateUpdate,
+    CommentsController.validateId,
     checkValid,
     catchAsync(CommentsController.checkIfMovieExists),
     catchAsync(CommentsController.update)

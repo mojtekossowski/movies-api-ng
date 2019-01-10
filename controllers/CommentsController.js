@@ -5,19 +5,30 @@ const CommentsModel = require('../models/comments');
 const MoviesModel = require('../models/movies');
 
 exports.getAll = async (req, res, next) => {
-    res.status(HttpStatus.OK).json(await CommentsModel.getAllComments());
+    if (!req.query.user) {
+        return res.status(HttpStatus.OK).json(await CommentsModel.getAllComments());
+    }
+
+    const user = req.query.user.trim();
+    const comments = await CommentsModel.getCommentsByUser(user);
+    
+    res.status(HttpStatus.OK).json(comments);
 }
 
+exports.validateId = [
+    param('id').trim().isInt().withMessage('Comment id must be an integer.')
+]
+
 exports.getOne = async (req, res, next) => {
-    const user = req.params.user;
-    const comments = await CommentsModel.getCommentsByUser(user);
+    const id = req.params.id;
+    const comments = await CommentsModel.getCommentsById(id);
     if (!comments.length) {
         return res.status(HttpStatus.NOT_FOUND).json({
-            message: "User has no comments"
+            message: "Comment not found"
         });
     }
     
-    res.status(HttpStatus.OK).json(comments);
+    res.status(HttpStatus.OK).json(comments[0]);
 }
 
 exports.validateStore = [
@@ -57,10 +68,6 @@ exports.store = async (req, res, next) => {
 
     res.status(HttpStatus.CREATED).send();
 }
-
-exports.validateUpdate = [
-    param('id').trim().isInt().withMessage('Comment id must be an integer.')
-]
 
 exports.update = async (req, res, next) => {
     const id = req.params.id;

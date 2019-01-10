@@ -6,7 +6,13 @@ const { catchAsync, checkValid } = require('../middlewares/errors')
 const MoviesController = require('../controllers/MoviesController');
 
 movies.get('/', catchAsync(MoviesController.getAll));
-movies.get('/:title', catchAsync(MoviesController.getOne));
+
+movies.get('/:id', [
+    MoviesController.validateId,
+    checkValid,
+    catchAsync(MoviesController.getOne)
+]);
+
 movies.get('/:id/comments', [
     MoviesController.validateId,
     checkValid,
@@ -22,8 +28,9 @@ movies.post('/', [
 ]);
 
 movies.patch('/:id',[
-    MoviesController.validateUpdate,
+    MoviesController.validateId,
     checkValid,
+    catchAsync(MoviesController.checkIfExists),
     catchAsync(MoviesController.update)
 ]);
 

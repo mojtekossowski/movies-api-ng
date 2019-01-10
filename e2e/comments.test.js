@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 const server = require('../app');
 const { db } = require('../db');
 
-const CommentsModel = require('../models/comments');
+const commentsFields = ["movie_id", "user", "title", "contents"];
 
 describe('Comments', function () {
 
@@ -35,10 +35,29 @@ describe('Comments', function () {
                     expect(comments).to.be.lengthOf(8);
 
                     comments.forEach((comment) => {
-                        expect(comment).to.haveOwnProperty('movie_id');
-                        expect(comment).to.haveOwnProperty('user');
-                        expect(comment).to.haveOwnProperty('title');
-                        expect(comment).to.haveOwnProperty('contents');
+                        commentsFields.forEach((key) => {
+                            expect(comment).to.haveOwnProperty(key);
+                        });
+                    });
+
+                    done();
+                });
+        });
+
+        it ('GET all comments of given user', function(done) {
+            chai.request(server)
+                .get('/api/v1/comments?user=boris')
+                .then((res) => {
+                    expect(res).to.have.status(200);
+                    expect(res).to.be.json;
+
+                    const comments = Array.from(res.body);
+                    expect(comments).to.be.lengthOf(3);
+
+                    comments.forEach((comment) => {
+                        commentsFields.forEach((key) => {
+                            expect(comment).to.haveOwnProperty(key);
+                        });
                     });
 
                     done();
@@ -47,34 +66,42 @@ describe('Comments', function () {
 
     });
 
-    describe('/GET comments :user', function () {
+    describe('/GET comments :id', function () {
 
-        it ('GET comments from existing user', function (done) {
+        it ('GET existing comment', function (done) {
             chai.request(server)
-                .get('/api/v1/comments/boris')
+                .get('/api/v1/comments/1')
                 .then((res) => {
                     expect(res).to.have.status(200);
                     expect(res).to.be.json;
 
-                    const comments = Array.from(res.body);
+                    const comment = res.body;
 
-                    expect(comments).to.be.lengthOf(3);
-                    comments.forEach((comment) => {
-                        expect(comment).to.haveOwnProperty('movie_id');
-                        expect(comment).to.haveOwnProperty('user');
-                        expect(comment).to.haveOwnProperty('title');
-                        expect(comment).to.haveOwnProperty('contents');
+                    expect(comment).to.be.an('Object');
+                    commentsFields.forEach((key) => {
+                        expect(comment).to.haveOwnProperty(key);
                     });
 
                     done();
                 });
         });
 
-        it ('GET 0 comments from not existing user', function (done) {
+        it ('GET throws NOT_FOUND if there are no existing commentId', function (done) {
+            chai.request(server)
+                .get('/api/v1/comments/19')
+                .then((res) => {
+                    expect(res).to.have.status(404);
+                    expect(res).to.be.json;
+
+                    done();
+                });
+        });
+
+        it ('GET throws BAD_REQUEST if id was not set to integer', function (done) {
             chai.request(server)
                 .get('/api/v1/comments/foo')
                 .then((res) => {
-                    expect(res).to.have.status(404);
+                    expect(res).to.have.status(400);
                     expect(res).to.be.json;
 
                     done();
@@ -230,7 +257,7 @@ describe('Comments', function () {
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
                     "user": "Foo"
-                }).then(async (res) => {
+                }).then((res) => {
                     expect(res).to.have.status(204);
                     
                     done();
@@ -280,6 +307,14 @@ describe('Comments', function () {
 
     describe('/DELETE comments :id', function () {
 
+        this.beforeEach((done) => {
+            db.seed.run().then(() => done() );
+        });
+
+        this.afterEach((done) => {
+            db.seed.run().then(() => done() );
+        });
+        
         it ('DELETE removes existing comment', function (done) {
             Promise.all([
                 // Count existing comments
