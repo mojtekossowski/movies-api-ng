@@ -11,7 +11,7 @@
     "seed": "knex seed:run --knexfile ./config/knexfile.js",
     "pretest": "npm run-script migrate -- --env test && npm run-script seed -- --env test",
     "test": "NODE_ENV=test mocha --exit ./*/*.test.js",
-    "postinstall": "npm run-script migrate && npm run-script generate-docs",
+    "postinstall": "npm run-script migrate",
     "reload-db": "npm run-script loadenv && npm run-script rollback -- && npm run-script migrate --"
   },
   "author": "mojtekossowski",
