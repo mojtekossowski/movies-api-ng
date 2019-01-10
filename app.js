@@ -15,6 +15,7 @@ if (process.env.NODE_ENV !== 'test') {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(express.static('apidoc'))
 app.use(`/api/v${version}`, routes);
 
 app.use(catchErrors);

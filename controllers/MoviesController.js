@@ -105,7 +105,7 @@ exports.deleteOne = async (req, res, next) => {
         res.status(HttpStatus.OK).send();
     } else {
         res.status(HttpStatus.NOT_FOUND).json({
-            message: `Comment with given id doesn't exist`
+            message: "Movie not found"
         });
     }
 }

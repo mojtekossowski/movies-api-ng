@@ -62,3 +62,6 @@ typings/
 
 # visual studio code env
 .vscode
+
+# hide generated apidocs
+apidoc/

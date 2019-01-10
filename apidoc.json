@@ -1,0 +1,7 @@
+{
+    "name": "movies api ng",
+    "version": "0.0.0",
+    "description": "OMDB fetcher api",
+    "title": "OMDB fetcher api",
+    "url" : "http://movies-api-ng.herokuapp.com/api/v1"
+  }

@@ -4,13 +4,14 @@
   "description": "Movies rest API",
   "main": "server.js",
   "scripts": {
+    "generate-docs": "apidoc -i routes/ -o apidoc",
     "loadenv": "export $(egrep -v '^#' .env | xargs)",
     "rollback": "knex migrate:rollback --knexfile ./config/knexfile.js",
     "migrate": "knex migrate:latest --knexfile ./config/knexfile.js",
     "seed": "knex seed:run --knexfile ./config/knexfile.js",
     "pretest": "npm run-script migrate -- --env test && npm run-script seed -- --env test",
     "test": "NODE_ENV=test mocha --exit ./*/*.test.js",
-    "postinstall": "npm run-script migrate",
+    "postinstall": "npm run-script migrate && npm run-script generate-docs",
     "reload-db": "npm run-script loadenv && npm run-script rollback -- && npm run-script migrate --"
   },
   "author": "mojtekossowski",
@@ -28,6 +29,7 @@
     "pg": "^7.7.1"
   },
   "devDependencies": {
+    "apidoc": "^0.17.7",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "chai-http": "^4.2.1",
