@@ -48,6 +48,7 @@ When you're done with filing properties you can install dependencies and create 
 ```sh
     $ export $(egrep -v '^#' .env | xargs) # reads data from .env file
     $ npm install # installs dependencies
+    $ npm run-script migrate -- --env dev
 ```
 
 Then, you're able to run your local database:
