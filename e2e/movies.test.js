@@ -20,13 +20,13 @@ describe('Movies', function () {
     before((done) => {
         db.seed.run().then(() => done() );
     })
-    
+
     after((done) => {
         db.seed.run().then(() => done() );
     })
 
     describe('/GET movies', function () {
-        
+
         it ('GET all movies', function(done) {
             chai.request(server)
                 .get('/api/v1/movies')
@@ -41,7 +41,7 @@ describe('Movies', function () {
                     const movieKeys = ["id", ...Object.keys(fakeMovieRecord)];
                     movies.forEach((movie) => {
                         expect(movie).to.be.an('Object');
-                        
+
                         // Check if stored movie has proper keys
                         movieKeys.forEach((key) => {
                             expect(movie).to.haveOwnProperty(key)
@@ -146,10 +146,10 @@ describe('Movies', function () {
                         .then((res) => {
                             const movies = res.body
                             expect(movies).to.have.lengthOf(4);
-                            
+
                             const insertedMovie = movies[3];
                             expect(insertedMovie.title).to.be.equal('The Many Adventures of Winnie the Pooh');
-                            expect(insertedMovie.year).to.be.equal('1977');                            
+                            expect(insertedMovie.year).to.be.equal('1977');
 
                             done();
                         });
@@ -172,7 +172,7 @@ describe('Movies', function () {
                         .then((res) => {
                             const movies = res.body
                             expect(movies).to.have.lengthOf(4);
-                            
+
                             const insertedMovie = movies[3];
                             expect(insertedMovie.imdbid).to.be.equal("my-fake-imdb-id");
 
@@ -211,7 +211,7 @@ describe('Movies', function () {
                         .then((res) => {
                             const movies = res.body
                             expect(movies).to.have.lengthOf(3);
-                            
+
                             done();
                         });
                 });
@@ -237,7 +237,7 @@ describe('Movies', function () {
                     "title": "some_new_title"
                 }).then((res) => {
                     expect(res).to.have.status(204);
-                    
+
                     done();
                 })
         });
@@ -250,7 +250,7 @@ describe('Movies', function () {
                     "title": "new_title"
                 }).then((res) => {
                     expect(res).to.have.status(400);
-                    
+
                     done();
                 })
         });
@@ -263,7 +263,7 @@ describe('Movies', function () {
                     "not-existing-property": "new_contents"
                 }).then((res) => {
                     expect(res).to.have.status(400);
-                    
+
                     done();
                 })
         });
@@ -276,7 +276,7 @@ describe('Movies', function () {
                     "contents": "new_contents"
                 }).then((res) => {
                     expect(res).to.have.status(400);
-                    
+
                     done();
                 })
         });

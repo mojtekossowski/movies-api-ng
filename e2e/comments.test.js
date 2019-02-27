@@ -259,7 +259,7 @@ describe('Comments', function () {
                     "user": "Foo"
                 }).then((res) => {
                     expect(res).to.have.status(204);
-                    
+
                     done();
                 })
         });
@@ -272,7 +272,7 @@ describe('Comments', function () {
                     "user": "Foo"
                 }).then(async (res) => {
                     expect(res).to.have.status(400);
-                    
+
                     done();
                 })
         });
@@ -285,7 +285,7 @@ describe('Comments', function () {
                     "inexisting": "Foo"
                 }).then(async (res) => {
                     expect(res).to.have.status(400);
-                    
+
                     done();
                 })
         });
@@ -314,7 +314,7 @@ describe('Comments', function () {
         this.afterEach((done) => {
             db.seed.run().then(() => done() );
         });
-        
+
         it ('DELETE removes existing comment', function (done) {
             Promise.all([
                 // Count existing comments

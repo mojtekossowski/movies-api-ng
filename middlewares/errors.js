@@ -4,9 +4,9 @@ const HttpStatus = require('http-status-codes');
 /**
  * Wraps up async function/Promise object and executes next middleware function
  * when exception was thrown.
- * 
+ *
  * @param {Function|Promise} asyncFunction Asynchronous function or promise
- * @returns {Function} 
+ * @returns {Function}
  */
 const catchAsync = (asyncFunction) => {
     return (req, res, next) => {
@@ -16,7 +16,7 @@ const catchAsync = (asyncFunction) => {
 
 /**
  * Sends error message stored in Error object to the client
- * 
+ *
  */
 const catchErrors = (err, req, res, next) => {
     res.status(err.status || 500);

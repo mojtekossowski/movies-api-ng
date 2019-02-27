@@ -11,7 +11,7 @@ exports.getAll = async (req, res, next) => {
 
     const user = req.query.user.trim();
     const comments = await CommentsModel.getCommentsByUser(user);
-    
+
     res.status(HttpStatus.OK).json(comments);
 }
 
@@ -27,7 +27,7 @@ exports.getOne = async (req, res, next) => {
             message: "Comment not found"
         });
     }
-    
+
     res.status(HttpStatus.OK).json(comments[0]);
 }
 
@@ -41,7 +41,7 @@ exports.validateStore = [
 exports.checkIfMovieExists = async (req, res, next) => {
     if (req.body.movie_id) {
         const storedMovies = await MoviesModel.getMoviesById(req.body.movie_id);
-    
+
         if (!storedMovies.length) {
             return res.status(HttpStatus.BAD_REQUEST).json({
                 message: `Movie with given movie_id doesn't exist`

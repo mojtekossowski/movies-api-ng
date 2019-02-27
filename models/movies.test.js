@@ -20,7 +20,7 @@ describe('MoviesModel', function() {
             MoviesModel.getAllMovies().then((movies) => {
                 expect(movies).to.be.an("Array").that.is.not.empty;
                 expect(movies).to.be.an("Array").that.has.lengthOf(3);
-    
+
                 done();
             });
         });
@@ -35,7 +35,7 @@ describe('MoviesModel', function() {
                 expect(movies).to.have.lengthOf(1);
                 expect(movies[0].title).to.be.equal('Star Wars: Episode IV - A New Hope');
                 expect(movies[0].year).to.be.equal('1977');
-                
+
                 done();
             });
         });
@@ -48,7 +48,7 @@ describe('MoviesModel', function() {
                 done();
             });
         });
-    
+
     });
 
     describe('getMovieComments', function () {
@@ -57,13 +57,13 @@ describe('MoviesModel', function() {
             MoviesModel.getMovieComments(3).then(function (comments) {
                 expect(comments).to.be.an('Array');
                 expect(comments).to.be.lengthOf(2);
-                
+
                 expect(comments[0].user).to.be.equal('Boris');
                 expect(comments[0].title).to.be.equal('Baz');
-                
-                expect(comments[1].user).to.be.equal('Macciavelli');                
+
+                expect(comments[1].user).to.be.equal('Macciavelli');
                 expect(comments[1].title).to.be.equal('Dolor');
-                
+
                 done();
             });
         });
@@ -118,7 +118,7 @@ describe('MoviesModel', function() {
                     done();
                 });
             });
-        
+
         })
 
         it ('shouldnt insert movie if some fields not specified', function (done) {
@@ -138,7 +138,7 @@ describe('MoviesModel', function() {
         });
 
         it ('updates movie when diff is ok', function (done) {
-            MoviesModel.updateMovie(1, { 
+            MoviesModel.updateMovie(1, {
                 title: 'Foo'
             }).then((result) => {
                 expect(result).to.be.equal(1);

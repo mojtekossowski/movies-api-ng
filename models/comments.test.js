@@ -74,7 +74,7 @@ describe('CommentsModel', function () {
                 done();
             });
         });
-        
+
     });
 
     describe('updateComment', function () {
@@ -84,7 +84,7 @@ describe('CommentsModel', function () {
         });
 
         it ('updates movie when diff is ok', function (done) {
-            CommentsModel.updateComment(1, { 
+            CommentsModel.updateComment(1, {
                 user: 'Foo'
             }).then((result) => {
                 expect(result).to.be.equal(1);
@@ -98,7 +98,7 @@ describe('CommentsModel', function () {
         });
 
         it ('doesnt update when for wrong schema', function (done) {
-            expect(CommentsModel.updateComment(1, { 
+            expect(CommentsModel.updateComment(1, {
                 foo: 'Foo'
             })).to.eventually.be.rejected.then((error) => {
                 done();

@@ -10,14 +10,14 @@ const fieldsToOmmit = [
 /**
  * Normalizes fetched movie. Removes Response, poster and Ratings fields.
  * All keys are lower-cased.
- * 
- * @param {Object} fetchedMovie 
+ *
+ * @param {Object} fetchedMovie
  */
 function normalize (fetchedMovie) {
     const keys = Object.keys(fetchedMovie);
     return _.difference(keys, fieldsToOmmit)
-        .reduce((ret, key) => ({ 
-            ...ret, 
+        .reduce((ret, key) => ({
+            ...ret,
             [ key.toLowerCase() ]: fetchedMovie[key],
         }), { });
 }

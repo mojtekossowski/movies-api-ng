@@ -9,11 +9,11 @@ const MoviesController = require('../controllers/MoviesController');
  * @api {get} /movies      Get All Movies
  * @apiName GetAllMovies
  * @apiGroup Movies
- * 
+ *
  * @apiDescription Lists all Movies. You are able to filter Movies by movies's title.
- * 
+ *
  * @apiParam {String} [title]    Optional Movie Title
- * 
+ *
  * @apiSuccess (Movies) {Object[]} -                Movies
  * @apiSuccess (Movies) {Number}   -.id             Movie's Id
  * @apiSuccess (Movies) {String}   -.title          Movie's Title
@@ -38,7 +38,7 @@ const MoviesController = require('../controllers/MoviesController');
  * @apiSuccess (Movies) {String}   -.boxoffice      Movie's Box office
  * @apiSuccess (Movies) {String}   -.production     Movie's Production
  * @apiSuccess (Movies) {String}   -.website        Movie's Website
- * 
+ *
  * @apiSuccessExample Success-Response: GetAllMoviesSuccess
  *  HTTP/1.1 200 OK
  *  {
@@ -70,7 +70,7 @@ const MoviesController = require('../controllers/MoviesController');
  *          }
  *      ]
  *  }
- * 
+ *
  */
 movies.get('/', catchAsync(MoviesController.getAll));
 
@@ -78,11 +78,11 @@ movies.get('/', catchAsync(MoviesController.getAll));
  * @api {get} /movies/:id      Get Movie Information
  * @apiName GetMovieId
  * @apiGroup Movies
- * 
+ *
  * @apiDescription Returns Movie by given Movie Id
- * 
+ *
  * @apiParam {Number} id    Movie Id
- * 
+ *
  * @apiSuccess {Number}   id             Movie's Id
  * @apiSuccess {String}   title          Movie's Title
  * @apiSuccess {String}   year           Movie's Prodution year
@@ -106,7 +106,7 @@ movies.get('/', catchAsync(MoviesController.getAll));
  * @apiSuccess {String}   boxoffice      Movie's Box office
  * @apiSuccess {String}   production     Movie's Production
  * @apiSuccess {String}   website        Movie's Website
- * 
+ *
  * @apiSuccessExample Success-Response: GetMovieIdSuccess
  *  HTTP/1.1 200 OK
  *  {
@@ -134,13 +134,13 @@ movies.get('/', catchAsync(MoviesController.getAll));
  *      "production": "Universal Pictures",
  *      "website": "N/A"
  *  }
- * 
+ *
  * @apiErrorExample Error-Response: MovieIdNotFound
  *  HTTP/1.1 404 NOT_FOUND
  *  {
  *      "message": "Movie not found"
  *  }
- * 
+ *
  * @apiErrorExample Error-Response: MovieIdParametersInvalid
  *  HTTP/1.1 400 BAD_REQUEST
  *  {
@@ -152,7 +152,7 @@ movies.get('/', catchAsync(MoviesController.getAll));
  *          "msg": "Movie id must be an integer."
  *      }
  *  }
- * 
+ *
  */
 movies.get('/:id', [
     MoviesController.validateId,
@@ -164,18 +164,18 @@ movies.get('/:id', [
  * @api {get} /movies/:id/comments      Get All comments for given Movie by Movie Id
  * @apiName GetMovieComments
  * @apiGroup Movies
- * 
+ *
  * @apiDescription Returns All Comments of Movie by given Movie Id
- * 
+ *
  * @apiParam {Number} id    Movie Id
- * 
+ *
  * @apiSuccess (Comments) {Object[]} -           Comments
  * @apiSuccess (Comments) {Number}   -.id        Comment's Id
  * @apiSuccess (Comments) {Number}   -.movie_id  Comment's Movie Id
  * @apiSuccess (Comments) {String}   -.user      Comment's User
  * @apiSuccess (Comments) {String}   -.title     Comment's Title
  * @apiSuccess (Comments) {String}   -.contents  Comment's Contents
- * 
+ *
  * @apiSuccessExample Success-Response: GetAllMovieCommentsSuccess
  *  HTTP/1.1 200 OK
  *  {
@@ -189,13 +189,13 @@ movies.get('/:id', [
  *          }
  *      ]
  *  }
- * 
+ *
  * @apiErrorExample Error-Response: MovieIdNotFound
  *  HTTP/1.1 404 NOT_FOUND
  *  {
  *      "message": "Movie not found"
  *  }
- * 
+ *
  * @apiErrorExample Error-Response: MovieIdParametersInvalid
  *  HTTP/1.1 400 BAD_REQUEST
  *  {
@@ -207,7 +207,7 @@ movies.get('/:id', [
  *          "msg": "Movie id must be an integer."
  *      }
  *  }
- * 
+ *
  */
 movies.get('/:id/comments', [
     MoviesController.validateId,
@@ -219,10 +219,10 @@ movies.get('/:id/comments', [
  * @api {post} /movies     Movie Insertion
  * @apiName PostMovie
  * @apiGroup Movies
- * 
- * @apiDescription Insert new Movie. If any of following fields are missing, 
- * movie would be fetched from OMDB Api 
- * 
+ *
+ * @apiDescription Insert new Movie. If any of following fields are missing,
+ * movie would be fetched from OMDB Api
+ *
  * @apiParam {String}   title            Movie's Title
  * @apiParam {String}   [year]           Optional Movie's Prodution year
  * @apiParam {String}   [rated]          Optional Movie's Rated
@@ -245,10 +245,10 @@ movies.get('/:id/comments', [
  * @apiParam {String}   [boxoffice]      Optional Movie's Box office
  * @apiParam {String}   [production]     Optional Movie's Production
  * @apiParam {String}   [website]        Optional Movie's Website
- * 
+ *
  * @apiSuccessExample Success-Response: PostMovieSuccess
  *  HTTP/1.1 201 CREATED
- * 
+ *
  * @apiError MovieMissingTitle Post request sent without title
  * @apiErrorExample Error-Response: MovieMissingTitle
  *  HTTP/1.1 400 BAD_REQUEST
@@ -261,28 +261,28 @@ movies.get('/:id/comments', [
  *          "msg": "No title specified."
  *      }
  *  }
- * 
+ *
  * @apiError MovieConflict Post request sent but movie exists
  * @apiErrorExample Error-Response: MovieConflict
  *  HTTP/1.1 409 CONFLICT
  *  {
  *      "message": "Movie already exists in database"
  *  }
- * 
+ *
  * @apiError MovieExternalApiError Post request sent but OMDB Api throws error
  * @apiErrorExample Error-Response: MovieExternalApiError
  *  HTTP/1.1 500 INTERNAL_SERVER_ERROR
  *  {
  *      "message": "External Api error: ExternalApiError"
  *  }
- * 
+ *
  * @apiError MovieInvalidSchema Post request sent with not supported schema
  * @apiErrorExample Error-Response: MovieInvalidSchema
  *  HTTP/1.1 400 BAD_REQUEST
  *  {
  *      "message": "Unable to store - invalid schema"
  *  }
- * 
+ *
  */
 movies.post('/', [
     MoviesController.validateStore,
@@ -296,9 +296,9 @@ movies.post('/', [
  * @api {patch} /movies/:id   Movie Update
  * @apiName PatchMovie
  * @apiGroup Movies
- * 
+ *
  * @apiDescription Updates Movie specified by Movie Id with given parameters
- * 
+ *
  * @apiParam {Number}   id              Movie's Id
  * @apiParam {String}   [title]         Optional Movie's Title
  * @apiParam {String}   [year]          Optional Movie's Prodution year
@@ -322,24 +322,24 @@ movies.post('/', [
  * @apiParam {String}   [boxoffice]     Optional Movie's Box office
  * @apiParam {String}   [production]    Optional Movie's Production
  * @apiParam {String}   [website]       Optional Movie's Website
- * 
+ *
  * @apiSuccessExample Success-Response: PostMovieSuccess
  *  HTTP/1.1 204 NO_CONTENT
- * 
+ *
  * @apiError MovieIdNotFound Patch request invalid Movie Id
  * @apiErrorExample Error-Response: MovieIdNotFound
  *  HTTP/1.1 404 NOT_FOUND
  *  {
  *      "message": "Movie not found"
  *  }
- * 
+ *
  * @apiError MovieInvalidSchema Patch request sent with not supported schema
  * @apiErrorExample Error-Response: MovieInvalidSchema
  *  HTTP/1.1 400 BAD_REQUEST
  *  {
  *      "message": "Unable to update - invalid schema"
  *  }
- * 
+ *
  */
 movies.patch('/:id',[
     MoviesController.validateId,
@@ -352,20 +352,20 @@ movies.patch('/:id',[
  * @api {delete} /movies/:id   Movie Remove
  * @apiName DeleteMovieById
  * @apiGroup Movies
- * 
+ *
  * @apiDescription Deletes Movie by given Movie Id
- * 
+ *
  * @apiParam {Number} id        Movie id
- *  
+ *
  * @apiSuccessExample Success-Response: DeleteMovieByIdSuccess
  *  HTTP/1.1 200 OK
- * 
+ *
  * @apiErrorExample Error-Response: MovieIdNotFound
  *  HTTP/1.1 404 NOT_FOUND
  *  {
  *      "message": "Movie not found"
  *  }
- * 
+ *
  */
 movies.delete('/:id', catchAsync(MoviesController.deleteOne));
 

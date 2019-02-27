@@ -9,10 +9,10 @@ exports.getAll = async (req, res, next) => {
     if (!req.query.title) {
         return res.status(HttpStatus.OK).json(await MoviesModel.getAllMovies());
     }
-    
+
     const title = req.query.title.trim();
     const movies = await MoviesModel.getMoviesByTitle(title);
-    
+
     res.status(HttpStatus.OK).json(movies);
 }
 
@@ -28,7 +28,7 @@ exports.getOne = async (req, res, next) => {
             message: "Movie not found"
         });
     }
-    
+
     res.status(HttpStatus.OK).json(movies[0]);
 }
 
@@ -43,7 +43,7 @@ exports.validateStore = [
 
 exports.checkIfExists = async (req, res, next) => {
     const title = req.body.title;
-    
+
     const existingMovie = await MoviesModel.getMoviesByTitle(title)
     if (existingMovie.length) {
         return res.status(HttpStatus.CONFLICT).json({

@@ -13,12 +13,12 @@ const OpenMoviesProvider = require('./OpenMoviesProvider')
 describe('OpenMoviesProvider', function () {
 
     describe('nomalize', function () {
-        
+
         it ('generates proper normalization object', function () {
             const fetchedObject = {
                 FOO: 1, bAr: 2, Baz: 3
             };
-    
+
             expect(OpenMoviesProvider.normalize(fetchedObject)).to.be.deep.equal({
                 foo: 1, bar: 2, baz: 3
             });
@@ -42,7 +42,7 @@ describe('OpenMoviesProvider', function () {
         beforeEach(() => {
             sandbox = sinon.createSandbox();
         });
-          
+
         afterEach(() => {
             sandbox.restore();
         });
@@ -51,10 +51,10 @@ describe('OpenMoviesProvider', function () {
             sandbox.stub(axios, 'get').resolves({
                 status: 200,
                 data: {
-                    Title: "Foo", 
-                    Director: "Bar", 
-                    Response: "Baz", 
-                    Poster: "Asdf", 
+                    Title: "Foo",
+                    Director: "Bar",
+                    Response: "Baz",
+                    Poster: "Asdf",
                     Ratings: "Ghij"
                 }
             });
